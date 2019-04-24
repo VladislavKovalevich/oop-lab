@@ -16,6 +16,9 @@ import bsuir.vlad.oop.figures.DrawItem;
 import bsuir.vlad.oop.figures.DrawItemBuilder;
 import bsuir.vlad.oop.figures.DrawType;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class PaintForm extends Application {
     private ToggleButton btnLine;
     private ToggleButton btnRect;
@@ -41,12 +44,12 @@ public class PaintForm extends Application {
 
         Scene mainScene = new Scene(rootNode, 1200, 800);
 
-        btnRhombus            = new ToggleButton(DrawType.RHOMBUS.getDisplayName());
-        btnRightTriangle = new ToggleButton(DrawType.RIGHT_TRIANGLE.getDisplayName());
+        btnRhombus           = new ToggleButton(DrawType.RHOMBUS.getDisplayName());
+        btnRightTriangle     = new ToggleButton(DrawType.RIGHT_TRIANGLE.getDisplayName());
         btnLine              = new ToggleButton(DrawType.LINE.getDisplayName());
         btnOval              = new ToggleButton(DrawType.OVAL.getDisplayName());
         btnRect              = new ToggleButton(DrawType.RECTANGLE.getDisplayName());
-        btnIsoTriangle          = new ToggleButton(DrawType.ISO_TRIANGLE.getDisplayName());
+        btnIsoTriangle       = new ToggleButton(DrawType.ISO_TRIANGLE.getDisplayName());
 
         openButton = new Button("Open");
         saveButton = new Button("Save");
@@ -107,6 +110,8 @@ public class PaintForm extends Application {
         rect.setFill(Color.GRAY);
         group.getChildren().add(rect);
 
+        List<Shape> historyShapes = new LinkedList<Shape>();
+
         group.setOnMousePressed(event -> {
             Toggle tg = TogGroup.getSelectedToggle();
 
@@ -129,6 +134,10 @@ public class PaintForm extends Application {
                     shape.setStrokeWidth(5);
 
                     group.getChildren().add(shape);
+
+                    if(historyShapes.size() > 0){
+                        historyShapes.clear();
+                    }
                 }
             }
         });
@@ -161,6 +170,22 @@ public class PaintForm extends Application {
                 if (item != null) {
                     item.stopShape(event.getX(), event.getY());
                 }
+            }
+        });
+
+
+        undoButton.setOnAction(event -> {
+            if(group.getChildren().size() > 1){
+                Shape tmp = (Shape) group.getChildren().remove(group.getChildren().size() - 1);
+                historyShapes.add(tmp);
+            }
+        });
+
+
+        redoButton.setOnAction(event -> {
+            if(historyShapes.size() > 0){
+                Shape tmp = historyShapes.remove(historyShapes.size() - 1);
+                group.getChildren().add(tmp);
             }
         });
 
