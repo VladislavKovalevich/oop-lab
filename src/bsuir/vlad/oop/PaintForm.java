@@ -2,14 +2,19 @@ package bsuir.vlad.oop;
 
 import javafx.application.Application;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+
+import bsuir.vlad.oop.figures.DrawItem;
+import bsuir.vlad.oop.figures.DrawItemBuilder;
+import bsuir.vlad.oop.figures.DrawType;
 
 public class PaintForm extends Application {
     private ToggleButton btnLine;
@@ -35,12 +40,13 @@ public class PaintForm extends Application {
         BorderPane rootNode = new BorderPane();
 
         Scene mainScene = new Scene(rootNode, 1200, 800);
-        btnRhombus            = new ToggleButton("rhombus");
-        btnRightTriangle = new ToggleButton("rightTriangle");
-        btnLine              = new ToggleButton("line");
-        btnOval              = new ToggleButton("Oval");
-        btnRect              = new ToggleButton("Rectangle");
-        btnIsoTriangle          = new ToggleButton("IsoTriangle");
+
+        btnRhombus            = new ToggleButton(DrawType.RHOMBUS.getDisplayName());
+        btnRightTriangle = new ToggleButton(DrawType.RIGHT_TRIANGLE.getDisplayName());
+        btnLine              = new ToggleButton(DrawType.LINE.getDisplayName());
+        btnOval              = new ToggleButton(DrawType.OVAL.getDisplayName());
+        btnRect              = new ToggleButton(DrawType.RECTANGLE.getDisplayName());
+        btnIsoTriangle          = new ToggleButton(DrawType.ISO_TRIANGLE.getDisplayName());
 
         openButton = new Button("Open");
         saveButton = new Button("Save");
@@ -95,6 +101,70 @@ public class PaintForm extends Application {
         vPanel.getChildren().add(itemsTitledPane);
         vPanel.getChildren().add(imageSaveOpenTitledPane);
 
+        final Group group = new Group();
+
+        Rectangle rect = new Rectangle(1,1, 1060, 800);
+        rect.setFill(Color.GRAY);
+        group.getChildren().add(rect);
+
+        group.setOnMousePressed(event -> {
+            Toggle tg = TogGroup.getSelectedToggle();
+
+            if (tg instanceof ToggleButton) {
+                ToggleButton tgb = (ToggleButton) tg;
+                DrawItem item = (DrawItem)tgb.getUserData();
+
+                if (item == null) {
+                    DrawType type = DrawType.getTypeByText(tgb.getText());
+                    item = DrawItemBuilder.buildDrawItem(type);
+                    tgb.setUserData(item);
+                }
+
+                if (item != null) {
+                    item.startShape(event.getX(), event.getY());
+
+                    Shape shape = item.getShape();
+                    shape.setFill(Color.GRAY);
+                    shape.setStroke(Color.RED);
+                    shape.setStrokeWidth(5);
+
+                    group.getChildren().add(shape);
+                }
+            }
+        });
+
+        group.setOnMouseDragged(event-> {
+            if ((event.getX() <= 5) || (event.getY() <= 5) ||
+                    (event.getX() >= (rect.getWidth() - 5)) ||
+                    (event.getY() >= (rect.getHeight() - 5))) {
+                return;
+            }
+            Toggle tg = TogGroup.getSelectedToggle();
+
+            if (tg instanceof ToggleButton) {
+                ToggleButton tgb = (ToggleButton) tg;
+                DrawItem item = (DrawItem)tgb.getUserData();
+
+                if (item != null) {
+                    item.dragShape(event.getX(), event.getY());
+                }
+            }
+        });
+
+        group.setOnMouseReleased(event-> {
+            Toggle tg = TogGroup.getSelectedToggle();
+
+            if (tg instanceof ToggleButton) {
+                ToggleButton tgb = (ToggleButton) tg;
+                DrawItem item = (DrawItem)tgb.getUserData();
+
+                if (item != null) {
+                    item.stopShape(event.getX(), event.getY());
+                }
+            }
+        });
+
+        rootNode.setCenter(group);
         rootNode.setRight(vPanel);
         rootNode.setLeft(null);
         rootNode.setTop(null);
