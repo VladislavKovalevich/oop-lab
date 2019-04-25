@@ -7,9 +7,9 @@ public class RectangleItem extends AbstractDrawItem{
     private double leftUpX;
     private double leftUpY;
 
-    protected RectangleItem() {
-        super(DrawType.RECTANGLE);
-    }
+  //  protected RectangleItem() {
+ //       super(DrawType.RECTANGLE);
+ //   }
 
     @Override
     public void startShape(double x, double y) {

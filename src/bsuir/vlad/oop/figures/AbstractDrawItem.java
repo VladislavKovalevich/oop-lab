@@ -16,11 +16,6 @@ public abstract class AbstractDrawItem implements DrawItem{
         this.type = type;
     }
 
-    @Override
-    public DrawType getType(){
-        return type;
-    }
-
     protected void setShape(Shape shape) {
         this.shape = shape;
     }

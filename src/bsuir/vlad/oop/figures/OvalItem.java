@@ -7,9 +7,9 @@ public class OvalItem extends AbstractDrawItem{
     private  double leftUpX;
     private  double leftUpY;
 
-    protected OvalItem() {
-        super(DrawType.OVAL);
-    }
+   // protected OvalItem() {
+   //     super(DrawType.OVAL);
+  //  }
 
     @Override
     public void startShape(double x, double y) {

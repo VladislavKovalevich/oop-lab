@@ -7,9 +7,9 @@ public class IsoTriangleItem extends AbstractDrawItem{
     private double startX;
     private double startY;
 
-    protected IsoTriangleItem() {
-        super(DrawType.ISO_TRIANGLE);
-    }
+    //protected IsoTriangleItem() {
+   //     super(DrawType.ISO_TRIANGLE);
+   // }
 
     @Override
     public void startShape(double x, double y) {

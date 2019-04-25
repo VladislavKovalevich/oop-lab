@@ -4,8 +4,8 @@ import javafx.scene.shape.Line;
 
 public class LineItem extends AbstractDrawItem {
 
-    protected LineItem() {
-        super(DrawType.LINE);
+    protected LineItem(DrawType type) {
+        super(type);
     }
 
     @Override

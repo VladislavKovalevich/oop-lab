@@ -7,9 +7,9 @@ public class RightTriangleItem extends AbstractDrawItem{
     private double startX;
     private double startY;
 
-    protected RightTriangleItem() {
-        super(DrawType.RIGHT_TRIANGLE);
-    }
+  //  protected RightTriangleItem() {
+ //       super(DrawType.RIGHT_TRIANGLE);
+ //   }
 
     @Override
     public void startShape(double x, double y) {

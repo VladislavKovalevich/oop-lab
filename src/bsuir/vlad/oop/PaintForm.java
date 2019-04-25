@@ -107,7 +107,7 @@ public class PaintForm extends Application {
         final Group group = new Group();
 
         Rectangle rect = new Rectangle(1,1, 1060, 800);
-        rect.setFill(Color.GRAY);
+        rect.setFill(Color.WHITE);
         group.getChildren().add(rect);
 
         List<Shape> historyShapes = new LinkedList<Shape>();
@@ -129,8 +129,8 @@ public class PaintForm extends Application {
                     item.startShape(event.getX(), event.getY());
 
                     Shape shape = item.getShape();
-                    shape.setFill(Color.GRAY);
-                    shape.setStroke(Color.RED);
+                    shape.setFill(Color.WHITE);
+                    shape.setStroke(Color.BLUE);
                     shape.setStrokeWidth(5);
 
                     group.getChildren().add(shape);
@@ -153,10 +153,7 @@ public class PaintForm extends Application {
             if (tg instanceof ToggleButton) {
                 ToggleButton tgb = (ToggleButton) tg;
                 DrawItem item = (DrawItem)tgb.getUserData();
-
-                if (item != null) {
-                    item.dragShape(event.getX(), event.getY());
-                }
+                item.dragShape(event.getX(), event.getY());
             }
         });
 
@@ -166,10 +163,7 @@ public class PaintForm extends Application {
             if (tg instanceof ToggleButton) {
                 ToggleButton tgb = (ToggleButton) tg;
                 DrawItem item = (DrawItem)tgb.getUserData();
-
-                if (item != null) {
-                    item.stopShape(event.getX(), event.getY());
-                }
+                item.stopShape(event.getX(), event.getY());
             }
         });
 

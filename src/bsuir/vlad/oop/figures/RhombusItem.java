@@ -8,9 +8,9 @@ public class RhombusItem extends AbstractDrawItem{
     private double startY;
 
 
-    protected RhombusItem() {
-        super(DrawType.RHOMBUS);
-    }
+ //   protected RhombusItem() {
+  //      super(DrawType.RHOMBUS);
+  //  }
 
     @Override
     public void startShape(double x, double y) {
