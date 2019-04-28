@@ -1,15 +1,22 @@
 package bsuir.vlad.oop.figures;
 
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Shape;
 
 public class OvalItem extends AbstractDrawItem{
+
+    private static OvalItem instance = new OvalItem();
+
+    public static OvalItem getInstance() {
+        return instance;
+    }
 
     private  double leftUpX;
     private  double leftUpY;
 
-   // protected OvalItem() {
-   //     super(DrawType.OVAL);
-  //  }
+    private OvalItem() {
+        super(DrawType.OVAL);
+    }
 
     @Override
     public void startShape(double x, double y) {
@@ -47,4 +54,39 @@ public class OvalItem extends AbstractDrawItem{
         ellipse.setRadiusX(Math.abs(lenX));
         ellipse.setRadiusY(Math.abs(lenY));
     }
+
+    @Override
+    public String save(Shape shape) {
+        Ellipse ellipse = (Ellipse) shape;
+
+        String ret = "" + DrawType.OVAL.name() + "|" +
+                ellipse.getCenterX() + "|" +
+                ellipse.getCenterY() + "|" +
+                ellipse.getRadiusX() + "|" +
+                ellipse.getRadiusY();
+
+        return ret;
+    }
+
+    @Override
+    public Shape load(String[] array) {
+        if ((array == null) || (array.length != 5)) {
+            return null;
+        }
+
+        if (!array[0].equals(DrawType.OVAL.name())) {
+            return null;
+        }
+
+        Ellipse ellipse = new Ellipse();
+        ellipse.setCenterX(Double.valueOf(array[1]));
+        ellipse.setCenterY(Double.valueOf(array[2]));
+        ellipse.setRadiusX(Double.valueOf(array[3]));
+        ellipse.setRadiusY(Double.valueOf(array[4]));
+
+        addShape(ellipse);
+
+        return ellipse;
+    }
+
 }

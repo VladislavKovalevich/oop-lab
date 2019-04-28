@@ -1,16 +1,24 @@
 package bsuir.vlad.oop.figures;
 
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Shape;
 
 public class RhombusItem extends AbstractDrawItem{
+
+    private static RhombusItem instance = new RhombusItem();
+
+    public static RhombusItem getInstance() {
+        return instance;
+    }
 
     private double startX;
     private double startY;
 
 
- //   protected RhombusItem() {
-  //      super(DrawType.RHOMBUS);
-  //  }
+    private RhombusItem() {
+        super(DrawType.RHOMBUS);
+    }
 
     @Override
     public void startShape(double x, double y) {
@@ -51,6 +59,50 @@ public class RhombusItem extends AbstractDrawItem{
             romb.getPoints().set(1,startY - lenY);
             romb.getPoints().set(5,startY - lenY);
         }
+    }
+
+    @Override
+    public String save(Shape shape) {
+        Polygon polygon = (Polygon) shape;
+
+        String ret = "" + DrawType.RHOMBUS.name() + "|" +
+                polygon.getPoints().get(0) + "|" +
+                polygon.getPoints().get(1) + "|" +
+                polygon.getPoints().get(2) + "|" +
+                polygon.getPoints().get(3) + "|" +
+                polygon.getPoints().get(4) + "|" +
+                polygon.getPoints().get(5) + "|" +
+                polygon.getPoints().get(6) + "|" +
+                polygon.getPoints().get(7);
+
+        return ret;
+    }
+
+    @Override
+    public Shape load(String[] array) {
+        if ((array == null) || (array.length != 9)) {
+            return null;
+        }
+
+        if (!array[0].equals(DrawType.RHOMBUS.name())) {
+            return null;
+        }
+
+        Polygon polygon = new Polygon();
+        polygon.getPoints().addAll(new Double[]{
+                Double.valueOf(array[1]),
+                Double.valueOf(array[2]),
+                Double.valueOf(array[3]),
+                Double.valueOf(array[4]),
+                Double.valueOf(array[5]),
+                Double.valueOf(array[6]),
+                Double.valueOf(array[7]),
+                Double.valueOf(array[8])
+        });
+
+        addShape(polygon);
+
+        return polygon;
     }
 
 }

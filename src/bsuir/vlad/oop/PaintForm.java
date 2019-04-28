@@ -1,8 +1,12 @@
 package bsuir.vlad.oop;
 
+import bsuir.vlad.oop.figures.DrawItem;
+import bsuir.vlad.oop.figures.DrawItemFactory;
+import bsuir.vlad.oop.figures.DrawType;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -12,10 +16,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 
-import bsuir.vlad.oop.figures.DrawItem;
-import bsuir.vlad.oop.figures.DrawItemBuilder;
-import bsuir.vlad.oop.figures.DrawType;
-
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class PaintForm extends Application {
     private ToggleButton btnRhombus;
 
     private Button saveButton;
-    private Button openButton;
+    private Button loadButton;
     private Button redoButton;
     private Button undoButton;
 
@@ -51,13 +52,13 @@ public class PaintForm extends Application {
         btnRect              = new ToggleButton(DrawType.RECTANGLE.getDisplayName());
         btnIsoTriangle       = new ToggleButton(DrawType.ISO_TRIANGLE.getDisplayName());
 
-        openButton = new Button("Open");
+        loadButton = new Button("Load");
         saveButton = new Button("Save");
         undoButton = new Button("Undo");
         redoButton = new Button("Redo");
 
         ToggleButton[] toggleButtons = {btnRhombus, btnRightTriangle, btnRect, btnLine, btnOval, btnIsoTriangle};
-        Button[] buttons = {openButton, saveButton, undoButton, redoButton};
+        Button[] buttons = {loadButton, saveButton, undoButton, redoButton};
         ToggleGroup TogGroup = new ToggleGroup();
 
         for(Button button: buttons){
@@ -85,7 +86,7 @@ public class PaintForm extends Application {
         VBox imageAction = new VBox(10);
 
         imageAction.getChildren().add(saveButton);
-        imageAction.getChildren().add(openButton);
+        imageAction.getChildren().add(loadButton);
         imageAction.setPrefWidth(140);
         imageAction.setStyle("-fx-background-color: #abcdea");
 
@@ -121,7 +122,7 @@ public class PaintForm extends Application {
 
                 if (item == null) {
                     DrawType type = DrawType.getTypeByText(tgb.getText());
-                    item = DrawItemBuilder.buildDrawItem(type);
+                    item = DrawItemFactory.getInstance().getDrawItem(type);
                     tgb.setUserData(item);
                 }
 
@@ -180,6 +181,52 @@ public class PaintForm extends Application {
             if(historyShapes.size() > 0){
                 Shape tmp = historyShapes.remove(historyShapes.size() - 1);
                 group.getChildren().add(tmp);
+            }
+        });
+
+        loadButton.setOnAction(event -> {
+            try {
+                LineNumberReader in = new LineNumberReader(new BufferedReader(new FileReader("saveShapes.txt")));
+
+                for (DrawType type : DrawType.values()) {
+                    DrawItemFactory.getInstance().getDrawItem(type).clear();
+                }
+
+                group.getChildren().remove(1, group.getChildren().size());
+
+                for (String str = in.readLine() ; (str != null) && (str.trim().length() != 0) ; str = in.readLine()) {
+                    Shape shape = DrawItemFactory.getInstance().loadItem(str);
+                    if (shape != null) {
+                        shape.setFill(Color.WHITE);
+                        shape.setStroke(Color.BLUE);
+                        shape.setStrokeWidth(5);
+
+                        group.getChildren().add(shape);
+                    }
+                }
+
+                in.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        saveButton.setOnAction(event -> {
+            try {
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("saveShapes.txt")));
+
+                for (DrawType type : DrawType.values()) {
+                    DrawItem item = DrawItemFactory.getInstance().getDrawItem(type);
+
+                    for (Shape shape : item.getShapes()) {
+                        out.println(item.save(shape));
+                    }
+                }
+
+                out.flush();
+                out.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
 

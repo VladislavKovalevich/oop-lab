@@ -1,11 +1,18 @@
 package bsuir.vlad.oop.figures;
 
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
 
 public class LineItem extends AbstractDrawItem {
 
-    protected LineItem(DrawType type) {
-        super(type);
+    private static LineItem instance = new LineItem();
+
+    public static LineItem getInstance() {
+        return instance;
+    }
+
+    private LineItem() {
+        super(DrawType.LINE);
     }
 
     @Override
@@ -27,4 +34,39 @@ public class LineItem extends AbstractDrawItem {
         line.setEndX(x);
         line.setEndY(y);
     }
+
+    @Override
+    public String save(Shape shape) {
+        Line line = (Line)shape;
+
+        String ret = "" + DrawType.LINE.name() + "|" +
+                line.getStartX() + "|" +
+                line.getStartY() + "|" +
+                line.getEndX() + "|" +
+                line.getEndY();
+
+        return ret;
+    }
+
+    @Override
+    public Shape load(String[] array) {
+        if ((array == null) || (array.length != 5)) {
+            return null;
+        }
+
+        if (!array[0].equals(DrawType.LINE.name())) {
+            return null;
+        }
+
+        Line line = new Line();
+        line.setStartX(Double.valueOf(array[1]));
+        line.setStartY(Double.valueOf(array[2]));
+        line.setEndX(Double.valueOf(array[3]));
+        line.setEndY(Double.valueOf(array[4]));
+
+        addShape(line);
+
+        return line;
+    }
+
 }

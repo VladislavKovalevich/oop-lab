@@ -5,7 +5,7 @@ import javafx.scene.shape.Shape;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractDrawItem implements DrawItem{
+public abstract class AbstractDrawItem implements DrawItem {
     private DrawType type;
     private Shape shape;
 
@@ -14,6 +14,11 @@ public abstract class AbstractDrawItem implements DrawItem{
 
     protected AbstractDrawItem(DrawType type) {
         this.type = type;
+    }
+
+    @Override
+    public DrawType getType() {
+        return type;
     }
 
     protected void setShape(Shape shape) {
@@ -27,7 +32,22 @@ public abstract class AbstractDrawItem implements DrawItem{
 
     @Override
     public void stopShape(double x, double y) {
-        shapes.add(shape);
+        addShape(shape);
         setShape(null);
     }
+
+    protected void addShape(Shape shape) {
+        shapes.add(shape);
+    }
+
+    @Override
+    public List<Shape> getShapes() {
+        return shapes;
+    }
+
+    @Override
+    public void clear() {
+        shapes.clear();
+    }
+
 }
