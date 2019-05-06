@@ -40,17 +40,17 @@ public class LineItem extends AbstractDrawItem {
         Line line = (Line)shape;
 
         String ret = "" + DrawType.LINE.name() + "|" +
-                line.getStartX() + "|" +
-                line.getStartY() + "|" +
-                line.getEndX() + "|" +
-                line.getEndY();
+                (line.getStartX() + shape.getLayoutX()) + "|" +
+                (line.getStartY() + shape.getLayoutY()) + "|" +
+                (line.getEndX() + shape.getLayoutX()) + "|" +
+                (line.getEndY() + shape.getLayoutY());
 
         return ret;
     }
 
     @Override
     public Shape load(String[] array) {
-        if ((array == null) || (array.length != 5)) {
+        if ((array == null) || (array.length != 8)) {
             return null;
         }
 
@@ -69,4 +69,30 @@ public class LineItem extends AbstractDrawItem {
         return line;
     }
 
+  /*  @Override
+    public void movingFigure(Shape shape) {
+        Line line = (Line)shape;
+
+        line.setOnMousePressed(event1 -> {
+            Shape shp = ((Shape)event1.getTarget());
+            shp.toFront();
+            layoutX = event1.getX();
+            layoutY = event1.getY();
+            shp.setStrokeWidth(shp.getStrokeWidth() + 5);
+        });
+
+        line.setOnMouseDragged(event1 -> {
+            Shape shp = ((Shape)event1.getTarget());
+            shp.setLayoutX(shp.getLayoutX() + (event1.getX() - layoutX));
+            System.out.println("moving line");
+            shp.setLayoutY(shp.getLayoutY() + (event1.getY() - layoutY));
+        });
+
+        line.setOnMouseReleased(event1 -> {
+            Shape shp = ((Shape)event1.getTarget());
+            shp.setStrokeWidth(shp.getStrokeWidth() - 5);
+        });
+
+        setShape(line);
+    }*/
 }

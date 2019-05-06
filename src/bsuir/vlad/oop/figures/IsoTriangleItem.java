@@ -50,24 +50,36 @@ public class IsoTriangleItem extends AbstractDrawItem{
         Polygon polygon = (Polygon) shape;
 
         String ret = "" + DrawType.ISO_TRIANGLE.name() + "|" +
-                polygon.getPoints().get(0) + "|" +
-                polygon.getPoints().get(1) + "|" +
-                polygon.getPoints().get(2) + "|" +
-                polygon.getPoints().get(3) + "|" +
-                polygon.getPoints().get(4) + "|" +
-                polygon.getPoints().get(5);
+                (polygon.getPoints().get(0) + shape.getLayoutX()) + "|" +
+                (polygon.getPoints().get(1) + shape.getLayoutY()) + "|" +
+                (polygon.getPoints().get(2) + shape.getLayoutX()) + "|" +
+                (polygon.getPoints().get(3) + shape.getLayoutY()) + "|" +
+                (polygon.getPoints().get(4) + shape.getLayoutX()) + "|" +
+                (polygon.getPoints().get(5) + shape.getLayoutY());
 
         return ret;
     }
 
     @Override
     public Shape load(String[] array) {
-        if ((array == null) || (array.length != 7)) {
+        if ((array == null) || (array.length != 10)) {
             return null;
         }
 
         if (!array[0].equals(DrawType.ISO_TRIANGLE.name())) {
             return null;
+        }
+
+        for(int i = 1; i < 7; i++){
+            if(i % 2 == 0){
+                if((Double.valueOf(array[i]) > 800) || (Double.valueOf(array[i]) < 0)){
+                    return null;
+                }
+            }else{
+                if((Double.valueOf(array[i]) > 1060) || (Double.valueOf(array[i]) < 0)){
+                    return null;
+                }
+            }
         }
 
         Polygon polygon = new Polygon();

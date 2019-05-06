@@ -60,8 +60,8 @@ public class OvalItem extends AbstractDrawItem{
         Ellipse ellipse = (Ellipse) shape;
 
         String ret = "" + DrawType.OVAL.name() + "|" +
-                ellipse.getCenterX() + "|" +
-                ellipse.getCenterY() + "|" +
+                (ellipse.getCenterX() + shape.getLayoutX()) + "|" +
+                (ellipse.getCenterY() + shape.getLayoutY()) + "|" +
                 ellipse.getRadiusX() + "|" +
                 ellipse.getRadiusY();
 
@@ -70,12 +70,24 @@ public class OvalItem extends AbstractDrawItem{
 
     @Override
     public Shape load(String[] array) {
-        if ((array == null) || (array.length != 5)) {
+        if ((array == null) || (array.length != 8)) {
             return null;
         }
 
         if (!array[0].equals(DrawType.OVAL.name())) {
             return null;
+        }
+
+        for(int i = 1; i < 3; i++){
+            if(i % 2 == 0){
+                if(((Double.valueOf(array[i]) + (Double.valueOf(array[4]))) > 800) || ((Double.valueOf(array[i]) + (Double.valueOf(array[4]))) < 0)){
+                    return null;
+                }
+            }else{
+                if(((Double.valueOf(array[i]) + (Double.valueOf(array[3]))) > 1060) || ((Double.valueOf(array[i]) + (Double.valueOf(array[3]))) < 0)){
+                    return null;
+                }
+            }
         }
 
         Ellipse ellipse = new Ellipse();
@@ -88,5 +100,4 @@ public class OvalItem extends AbstractDrawItem{
 
         return ellipse;
     }
-
 }

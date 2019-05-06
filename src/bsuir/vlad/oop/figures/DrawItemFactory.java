@@ -1,5 +1,6 @@
 package bsuir.vlad.oop.figures;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
 public class DrawItemFactory {
@@ -43,16 +44,36 @@ public class DrawItemFactory {
         DrawType type = DrawType.valueOf(typeStr);
         String[] array = itemStr.split("\\|");
 
+        Shape shape = null;
+
         switch (type) {
-            case LINE:            return LineItem.getInstance().load(array);
-            case RHOMBUS:         return RhombusItem.getInstance().load(array);
-            case OVAL:            return OvalItem.getInstance().load(array);
-            case RECTANGLE:       return RectangleItem.getInstance().load(array);
-            case ISO_TRIANGLE:    return IsoTriangleItem.getInstance().load(array);
-            case RIGHT_TRIANGLE:  return RightTriangleItem.getInstance().load(array);
+            case LINE:
+                shape = LineItem.getInstance().load(array);
+                break;
+            case RHOMBUS:
+                shape = RhombusItem.getInstance().load(array);
+                break;
+            case OVAL:
+                shape = OvalItem.getInstance().load(array);
+                break;
+            case RECTANGLE:
+                shape = RectangleItem.getInstance().load(array);
+                break;
+            case ISO_TRIANGLE:
+                shape = IsoTriangleItem.getInstance().load(array);
+                break;
+            case RIGHT_TRIANGLE:
+                shape = RightTriangleItem.getInstance().load(array);
+                break;
         }
 
-        return null;
+        if (shape != null) {
+            shape.setFill(Color.valueOf(array[array.length - 3]));
+            shape.setStroke(Color.valueOf(array[array.length - 2]));
+            shape.setStrokeWidth(Double.valueOf(array[array.length - 1]));
+        }
+
+        return shape;
     }
 
 }
